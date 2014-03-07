@@ -1,4 +1,4 @@
-ABOUT EPIC.UI (v 1.0.0)
+ABOUT EPIC.UI
 ====
 
 Semantic UI components for epic.js 

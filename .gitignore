@@ -29,6 +29,8 @@ AppPackages/
 
 
 # IGNORE FILE EXTENSIONS
+*.suo
+*.user
 *.sln.docstates
 
 *.dll
