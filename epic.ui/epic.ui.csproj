@@ -26,6 +26,7 @@
     <Content Include="core.js" />
     <Content Include="icon.js" />
     <Content Include="theme\default\style\epic.ui.css" />
+    <Content Include="theme\default\style\epic.ui.min.css" />
     <Content Include="viewport.js" />
   </ItemGroup>
   <ItemGroup>
@@ -93,22 +94,19 @@
       </FlavorProperties>
     </VisualStudio>
   </ProjectExtensions>
-	<Target Name="BeforeBuild">
-		<PropertyGroup>
-			<SourceLess>"$(ProjectDir)theme\default\less\epic.ui.less"</SourceLess>
-			<TargetLess>"$(ProjectDir)theme\default\style\epic.ui.css"</TargetLess>
-		</PropertyGroup>
-		
-		<Exec Command="$(SolutionDir)tools\WinLess.lessc.1.0.14\tools\lessc.cmd $(SourceLess) $(TargetLess)" Condition="Exists('$(SolutionDir)tools\WinLess.lessc.1.0.14\tools\lessc.cmd')" />
-	</Target>
-	
-	<Target Name="AfterBuild" DependsOnTargets="BuildAjaxMinManifests">
-		<ItemGroup>
-			<DeleteAfterBuild Include="$(ProjectDir)bin\*.dll" />
-		</ItemGroup>
-
-		<Exec Command="$(SolutionDir)Tools\post-build-local-release.bat $(SolutionDir)" Condition="Exists('$(SolutionDir)Tools\post-build-local-release.bat')" />
-		<Delete Files="@(DeleteAfterBuild)" />
-		<RemoveDir Directories="$(ProjectDir)obj\" Condition="Exists('$(ProjectDir)obj\')" />
-	</Target>
+  <Target Name="BeforeBuild">
+    <PropertyGroup>
+      <SourceLess>"$(ProjectDir)theme\default\less\epic.ui.less"</SourceLess>
+      <TargetLess>"$(ProjectDir)theme\default\style\epic.ui.css"</TargetLess>
+    </PropertyGroup>
+    <Exec Command="$(SolutionDir)tools\WinLess.lessc.1.0.14\tools\lessc.cmd $(SourceLess) $(TargetLess)" Condition="Exists('$(SolutionDir)tools\WinLess.lessc.1.0.14\tools\lessc.cmd')" />
+  </Target>
+  <Target Name="AfterBuild" DependsOnTargets="BuildAjaxMinManifests">
+    <ItemGroup>
+      <DeleteAfterBuild Include="$(ProjectDir)bin\*.dll" />
+    </ItemGroup>
+    <Exec Command="$(SolutionDir)Tools\post-build-local-release.bat $(SolutionDir)" Condition="Exists('$(SolutionDir)Tools\post-build-local-release.bat')" />
+    <Delete Files="@(DeleteAfterBuild)" />
+    <RemoveDir Directories="$(ProjectDir)obj\" Condition="Exists('$(ProjectDir)obj\')" />
+  </Target>
 </Project>

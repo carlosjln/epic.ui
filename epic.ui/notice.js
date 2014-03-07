@@ -37,7 +37,7 @@
 
 		close_button.innerHTML = "";
 		close_button.className = "epic-notice-close";
-		epic.event.add( close_button, "click", notice.event.close, container );
+		epic.event.add( "click", close_button, notice.event.close, container );
 
 		title_bar.innerHTML = title;
 		title_bar.className = "epic-notice-title";
@@ -49,8 +49,8 @@
 		container.insertBefore( title_bar, null );
 		container.insertBefore( message, null );
 
-		epic.event.add( container, "mouseover", notice.event.mouseover, close_button );
-		epic.event.add( container, "mouseout", notice.event.mouseout, close_button );
+		epic.event.add( "mouseover", container, notice.event.mouseover, close_button );
+		epic.event.add( "mouseout", container, notice.event.mouseout, close_button );
 
 		get_notification_rail().insertBefore( container, null );
 

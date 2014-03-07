@@ -1,5 +1,5 @@
 /*!
- * EPIC.UI.JS - v1.0.1
+ * EPIC.UI.JS - v1.0.4
  * Simple & awesome UI components for EPIC.JS
  * https://github.com/carlosjln/epic.ui
  * 
@@ -232,10 +232,9 @@
                 self.is_busy(false);
                 $(container).empty().append(self.loader);
                 return self
-            }, append: function(html) {
+            }, append: function() {
                 var self = this;
-                var content = typeof html === "string" ? $.create.document_fragment(html) : html;
-                self.container.insertBefore(content, null);
+                $(self.container).insert(arguments);
                 return self
             }
     };
@@ -270,7 +269,7 @@
         t.set_type(notice_type);
         close_button.innerHTML = "";
         close_button.className = "epic-notice-close";
-        epic.event.add(close_button, "click", notice.event.close, container);
+        epic.event.add("click", close_button, notice.event.close, container);
         title_bar.innerHTML = title;
         title_bar.className = "epic-notice-title";
         message.innerHTML = settings.message;
@@ -278,8 +277,8 @@
         container.insertBefore(close_button, null);
         container.insertBefore(title_bar, null);
         container.insertBefore(message, null);
-        epic.event.add(container, "mouseover", notice.event.mouseover, close_button);
-        epic.event.add(container, "mouseout", notice.event.mouseout, close_button);
+        epic.event.add("mouseover", container, notice.event.mouseover, close_button);
+        epic.event.add("mouseout", container, notice.event.mouseout, close_button);
         get_notification_rail().insertBefore(container, null);
         if (typeof timeout === "number") {
             setTimeout(function() {
@@ -431,6 +430,7 @@
 })(epic, epic.html);
 (function(epic) {
     var $ = epic.html;
+    var add_event = epic.event.add;
     function create(tag, classname, style, content) {
         var element = document.createElement(tag);
         element.className = classname || "";
@@ -444,7 +444,7 @@
         var content = $(settings.content).add_class("modal-content");
         var btn_hide = content.find(".btn-hide-overlay");
         var btn_remove = container.find(".btn-remove-overlay");
-        var handle = dark_side.events;
+        var handle = overlay.events;
         var self = this;
         var event_data = {
                 container: container, btn_close: (btn_remove || btn_hide), overlay: self
@@ -453,9 +453,9 @@
         self.container = container.get(0);
         self.overlay = dark_side.get(0);
         self.content = content.get(0);
-        btn_hide.click(event_data, handle.on_hide);
-        btn_remove.click(event_data, handle.on_hide);
-        container.keyup(event_data, handle.on_escape);
+        btn_hide.click(handle.on_hide, event_data);
+        btn_remove.click(handle.on_hide, event_data);
+        add_event(self.container, "keyup", handle.on_escape, event_data);
         $(settings.target || "body").append(container);
         var margin_top = content.height() / 2;
         var margin_left = content.width() / 2;
@@ -637,8 +637,8 @@
         var parent = target.parentNode || {};
         var target_class_name = target.className;
         var parent_class_name = parent.className;
-        var target_is_dropdown = target_class_name && typeof target_class_name == "string" && target_class_name.indexOf("dropdown") > -1;
-        var parent_is_dropdown = parent_class_name && typeof parent_class_name == "string" && parent_class_name.indexOf("dropdown") > -1;
+        var target_is_dropdown = target_class_name && typeof target_class_name === "string" && target_class_name.indexOf("dropdown") > -1;
+        var parent_is_dropdown = parent_class_name && typeof parent_class_name === "string" && parent_class_name.indexOf("dropdown") > -1;
         if (target_is_dropdown || parent_is_dropdown) {
             return
         }

@@ -1,5 +1,5 @@
 ﻿/*!
- * EPIC.UI.JS - v1.0.1
+ * EPIC.UI.JS - v1.0.4
  * Simple & awesome UI components for EPIC.JS
  * https://github.com/carlosjln/epic.ui
  * 

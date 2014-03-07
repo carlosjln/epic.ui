@@ -218,8 +218,8 @@
 		var target_class_name = target.className;
 		var parent_class_name = parent.className;
 
-		var target_is_dropdown = target_class_name && typeof target_class_name == "string" && target_class_name.indexOf( "dropdown" ) > -1;
-		var parent_is_dropdown = parent_class_name && typeof parent_class_name == "string" && parent_class_name.indexOf( "dropdown" ) > -1;
+		var target_is_dropdown = target_class_name && typeof target_class_name === "string" && target_class_name.indexOf( "dropdown" ) > -1;
+		var parent_is_dropdown = parent_class_name && typeof parent_class_name === "string" && parent_class_name.indexOf( "dropdown" ) > -1;
 
 		if( target_is_dropdown || parent_is_dropdown ) {
 			return;

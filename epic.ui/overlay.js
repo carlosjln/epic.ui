@@ -1,5 +1,6 @@
 ﻿( function( epic ) {
 	var $ = epic.html;
+	var add_event = epic.event.add;
 
 	function create( tag, classname, style, content ) {
 		var element = document.createElement( tag );
@@ -19,7 +20,7 @@
 		var btn_hide = content.find( ".btn-hide-overlay" );
 		var btn_remove = container.find( ".btn-remove-overlay" );
 
-		var handle = dark_side.events;
+		var handle = overlay.events;
 		var self = this;
 
 		var event_data = {
@@ -34,12 +35,11 @@
 		self.overlay = dark_side.get( 0 );
 		self.content = content.get( 0 );
 
-		btn_hide.click( event_data, handle.on_hide );
-
-		btn_remove.click( event_data, handle.on_hide );
-
-		container.keyup( event_data, handle.on_escape );
-
+		btn_hide.click( handle.on_hide, event_data );
+		btn_remove.click( handle.on_hide, event_data );
+		
+		add_event( self.container, "keyup", handle.on_escape, event_data );
+		
 		$( settings.target || "body" ).append( container );
 
 		var margin_top = content.height() / 2;

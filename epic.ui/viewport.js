@@ -88,11 +88,10 @@
 			return self;
 		},
 
-		append: function( html ) {
+		append: function( /*elements*/ ) {
 			var self = this;
-			var content = typeof html === "string" ? $.create.document_fragment( html ) : html;
 
-			self.container.insertBefore( content, null );
+			$( self.container ).insert( arguments );
 
 			return self;
 		}
