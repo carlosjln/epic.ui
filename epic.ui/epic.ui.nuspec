@@ -2,10 +2,10 @@
 <package >
   <metadata>
 	<id>Epic.ui</id>
-		<version>1.0.4</version>
+		<version>1.0.6</version>
 		
 		<title>Epic.ui</title>
-		<description>Epic UI components</description>
+		<description>Epic UI components B-)</description>
 		<tags></tags>
 		
 		<projectUrl>https://github.com/carlosjln/epic.ui</projectUrl>
@@ -18,7 +18,7 @@
 		<copyright>Copyright © 2014</copyright>
 		
 		<dependencies>
-			<dependency id="Epic" version="1.0.4" />
+			<dependency id="Epic" version="1.0.6" />
 		</dependencies>
 	</metadata>
 	

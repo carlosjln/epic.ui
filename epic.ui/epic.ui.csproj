@@ -18,8 +18,12 @@
   </PropertyGroup>
   <ItemGroup>
     <Content Include="alert.js" />
+    <Content Include="bin\epic.ui.js" />
+    <Content Include="bin\epic.ui.min.js" />
     <Content Include="button.js" />
     <Content Include="box.js" />
+    <Content Include="tab_panel.js" />
+    <Content Include="modalbox.js" />
     <Content Include="dropdown.js" />
     <Content Include="overlay.js" />
     <Content Include="notice.js" />
@@ -34,7 +38,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Content Include="theme\default\less\tab_panel.less" />
     <None Include="theme\default\less\dropdown.less" />
+    <Content Include="theme\default\less\overlay.less" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="theme\default\less\notice.less" />

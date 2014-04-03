@@ -8,13 +8,14 @@
 
 	var Option = (function() {
 		function option( settings ) {
-			var self = this;
-			var container = self.container = document.createElement( "a" );
+			var t = this;
+			var container = t.container = document.createElement( "a" );
 			
 			container.setAttribute( "href", "#" );
 
-			self.set_caption( settings.caption );
-			self.onselect = settings.onselect;
+			t.id = settings.id || epic_uid.next();
+			t.caption( settings.caption );
+			t.onselect = settings.onselect;
 		}
 
 		option.prototype = {
@@ -40,17 +41,22 @@
 				self.disabled = false;
 			},
 
-			set_caption: function( caption ) {
-				var self = this;
+			caption: function( caption ) {
+				var t = this;
 
-				if( typeof caption === "string" ) {
-					self.caption = caption;
-					self.container.innerHTML = caption;
+				if( caption === undefined ) {
+					return t.caption;
 				}
 				
-				return self;
+				if( typeof caption === "string" ) {
+					t.caption = caption;
+					t.container.innerHTML = caption;
+				}
+				
+				return t;
 			}
 		};
+
 		return option;
 	})();
 
@@ -65,9 +71,9 @@
 
 	function option_collection( dropdown ) {
 		var items = [];
-		var self = this;
+		var t = this;
 
-		self.add = function( options ) {
+		t.add = function( options ) {
 			if( options === undefined ) {
 				return;
 			}
@@ -110,8 +116,31 @@
 			dropdown.list.insertBefore( document_fragment, null );
 		};
 
-		self.get = function( index ) {
+		t.get = function( index ) {
 			return items[ index ];
+		};
+
+		t.empty = function () {
+			var list = dropdown.list;
+
+            while (list.firstChild) {
+                list.removeChild( list.firstChild );
+            }
+            
+			return this;
+		};
+
+		t.contains = function( caption ) {
+			var length = items.length;
+			var i = 0;
+
+			for( ; i < length; i++ ) {
+				if( items[i].caption === caption ) {
+					return true;
+				}
+			}
+
+			return false;
 		};
 	}
 
@@ -142,39 +171,6 @@
 		add_event( toggle_container, "click", handle_toggle_click, self );
 
 		options.add( settings.options );
-	}
-
-	// EVENT HANDLERS
-	function do_nothing( e ) {
-		e.prevent_default();
-	}
-
-	function open_dropdown( instance ) {
-		close_dropdown( last_dropdown_toggled );
-
-		var container = instance.container;
-
-		if( container.className.indexOf( "open" ) === -1 ) {
-			container.className += " open";
-		}
-
-		last_dropdown_toggled = instance;
-	}
-
-	function close_dropdown( instance ) {
-		if( ( instance instanceof dropdown ) === false ) {
-			return;
-		}
-
-		var container = instance.container;
-		container.className = trim_spaces( container.className.replace( /open/, "" ), true );
-
-		last_dropdown_toggled = undefined;
-	}
-
-	function handle_toggle_click( e, instance ) {
-		e.stop_propagation();
-		instance.toggle();
 	}
 
 	dropdown.prototype = {
@@ -210,6 +206,39 @@
 			return this.container.className.indexOf( "open" ) > -1;
 		}
 	};
+
+	// EVENT HANDLERS
+	function do_nothing( e ) {
+		e.prevent_default();
+	}
+
+	function open_dropdown( instance ) {
+		close_dropdown( last_dropdown_toggled );
+
+		var container = instance.container;
+
+		if( container.className.indexOf( "open" ) === -1 ) {
+			container.className += " open";
+		}
+
+		last_dropdown_toggled = instance;
+	}
+
+	function close_dropdown( instance ) {
+		if( ( instance instanceof dropdown ) === false ) {
+			return;
+		}
+
+		var container = instance.container;
+		container.className = trim_spaces( container.className.replace( /open/, "" ), true );
+
+		last_dropdown_toggled = undefined;
+	}
+
+	function handle_toggle_click( e, instance ) {
+		e.stop_propagation();
+		instance.toggle();
+	}
 
 	add_event( document, "click", function( e ) {
 		var target = e.target || {};

@@ -1,0 +1,59 @@
+﻿// NOTICE
+// ===================================================================
+
+@import "partials/mixins.less";
+@import "partials/variables.less";
+
+.epic-tab-panel {
+	position: relative;
+	overflow: hidden;
+
+	> .epic-tabs {
+		border-bottom: 1px solid #DDDDDD;
+		
+		li {
+			float: left;
+			position: relative;
+			margin-bottom: -1px;
+
+			a {
+				display: block;
+				padding: 10px 15px;
+				position: relative;
+
+				.set-top-radius();
+				border: 1px solid transparent;
+				border-bottom: 1px solid #DDDDDD;
+				background-color: #FFFFFF;
+				
+				text-align: center;
+				line-height: 1;
+				margin-right: 2px;
+
+				&:hover {
+					background-color: #EEEEEE;
+					border-color: #EEEEEE #EEEEEE #DDDDDD;
+				}
+			}
+		}
+
+		li.active {
+			a {
+				background-color: #FFFFFF;
+				border-color: #DDDDDD #DDDDDD rgba(0, 0, 0, 0);
+				
+				// border-style: solid;
+				// border-width: 1px;
+				color: #555555;
+				cursor: default;
+			}
+		}
+
+	}
+
+	> .epic-viewport {
+		top: 34px;
+		border: 1px solid #DDDDDD;
+		border-top-color: transparent;
+	}
+}

@@ -174,8 +174,7 @@
     epic.object.extend(button, prototype);
     epic.button = button
 })(epic, epic.html);
-(function(epic, window, document) {
-    var $ = epic.html;
+(function(epic, $, window, document) {
     function create(tag, classname, style, content) {
         var element = document.createElement(tag);
         element.className = classname || "";
@@ -240,7 +239,7 @@
     };
     epic.viewport = viewport;
     epic.view = view
-})(epic, window, document);
+})(epic, epic.html, window, document);
 (function(epic, document) {
     function get_notification_rail() {
         var id = "epic-notification-rail";
@@ -269,7 +268,7 @@
         t.set_type(notice_type);
         close_button.innerHTML = "";
         close_button.className = "epic-notice-close";
-        epic.event.add("click", close_button, notice.event.close, container);
+        epic.event.add(close_button, "click", notice.event.close, container);
         title_bar.innerHTML = title;
         title_bar.className = "epic-notice-title";
         message.innerHTML = settings.message;
@@ -277,8 +276,8 @@
         container.insertBefore(close_button, null);
         container.insertBefore(title_bar, null);
         container.insertBefore(message, null);
-        epic.event.add("mouseover", container, notice.event.mouseover, close_button);
-        epic.event.add("mouseout", container, notice.event.mouseout, close_button);
+        epic.event.add(container, "mouseover", notice.event.mouseover, close_button);
+        epic.event.add(container, "mouseout", notice.event.mouseout, close_button);
         get_notification_rail().insertBefore(container, null);
         if (typeof timeout === "number") {
             setTimeout(function() {
@@ -439,27 +438,26 @@
         return element
     }
     function overlay(settings) {
-        var container = $(create("div", "modal-container"));
-        var dark_side = $(create("div", "modal-overlay"));
-        var content = $(settings.content).add_class("modal-content");
+        var container = $(create("div", "overlay-container"));
+        var dark_side = $(create("div", "overlay"));
+        var content = $(settings.content).add_class("overlay-content");
         var btn_hide = content.find(".btn-hide-overlay");
         var btn_remove = container.find(".btn-remove-overlay");
         var handle = overlay.events;
         var self = this;
-        var event_data = {
-                container: container, btn_close: (btn_remove || btn_hide), overlay: self
-            };
         container.append(dark_side, content);
+        self.closable = settings.closable;
         self.container = container.get(0);
         self.overlay = dark_side.get(0);
         self.content = content.get(0);
-        btn_hide.click(handle.on_hide, event_data);
-        btn_remove.click(handle.on_hide, event_data);
-        add_event(self.container, "keyup", handle.on_escape, event_data);
+        btn_hide.click(handle.on_hide, self);
+        btn_remove.click(handle.on_hide, self);
+        dark_side.click(handle.on_hide, self);
+        add_event(self.container, "keyup", handle.on_escape, self);
         $(settings.target || "body").append(container);
         var margin_top = content.height() / 2;
         var margin_left = content.width() / 2;
-        content.css("margin", "-" + margin_top + "px 0 0 -" + margin_left + "px")
+        content.css("margin: -" + margin_top + "px 0 0 -" + margin_left + "px")
     }
     var prototype = overlay.prototype;
     prototype.hide = function() {
@@ -471,13 +469,15 @@
         return this
     };
     overlay.events = {
-        on_hide: function(e) {
-            e.preventDefault();
-            e.data.overlay.hide()
-        }, on_escape: function(e) {
-                e.preventDefault();
-                if (e.which === 27) {
-                    e.data.btn_close.click()
+        on_hide: function(e, oley) {
+            e.prevent_default();
+            if (oley.closable === true) {
+                oley.hide()
+            }
+        }, on_escape: function(e, oley) {
+                e.prevent_default();
+                if (e.which === 27 && oley.closable === true) {
+                    oley.hide()
                 }
             }
     };
@@ -492,11 +492,12 @@
     var epic_uid = epic.uid;
     var Option = (function() {
             function option(settings) {
-                var self = this;
-                var container = self.container = document.createElement("a");
+                var t = this;
+                var container = t.container = document.createElement("a");
                 container.setAttribute("href", "#");
-                self.set_caption(settings.caption);
-                self.onselect = settings.onselect
+                t.id = settings.id || epic_uid.next();
+                t.caption(settings.caption);
+                t.onselect = settings.onselect
             }
             option.prototype = {
                 constructor: option, disable: function() {
@@ -511,13 +512,16 @@
                         container.className = "";
                         container.removeAttribute("disabled");
                         self.disabled = false
-                    }, set_caption: function(caption) {
-                        var self = this;
-                        if (typeof caption === "string") {
-                            self.caption = caption;
-                            self.container.innerHTML = caption
+                    }, caption: function(caption) {
+                        var t = this;
+                        if (caption === undefined) {
+                            return t.caption
                         }
-                        return self
+                        if (typeof caption === "string") {
+                            t.caption = caption;
+                            t.container.innerHTML = caption
+                        }
+                        return t
                     }
             };
             return option
@@ -531,8 +535,8 @@
     }
     function option_collection(dropdown) {
         var items = [];
-        var self = this;
-        self.add = function(options) {
+        var t = this;
+        t.add = function(options) {
             if (options === undefined) {
                 return
             }
@@ -564,8 +568,25 @@
             }
             dropdown.list.insertBefore(document_fragment, null)
         };
-        self.get = function(index) {
+        t.get = function(index) {
             return items[index]
+        };
+        t.empty = function() {
+            var list = dropdown.list;
+            while (list.firstChild) {
+                list.removeChild(list.firstChild)
+            }
+            return this
+        };
+        t.contains = function(caption) {
+            var length = items.length;
+            var i = 0;
+            for (; i < length; i++) {
+                if (items[i].caption === caption) {
+                    return true
+                }
+            }
+            return false
         }
     }
     function dropdown(settings) {
@@ -586,29 +607,6 @@
         self.onselect = settings.onselect || do_nothing;
         add_event(toggle_container, "click", handle_toggle_click, self);
         options.add(settings.options)
-    }
-    function do_nothing(e) {
-        e.prevent_default()
-    }
-    function open_dropdown(instance) {
-        close_dropdown(last_dropdown_toggled);
-        var container = instance.container;
-        if (container.className.indexOf("open") === -1) {
-            container.className += " open"
-        }
-        last_dropdown_toggled = instance
-    }
-    function close_dropdown(instance) {
-        if ((instance instanceof dropdown) === false) {
-            return
-        }
-        var container = instance.container;
-        container.className = trim_spaces(container.className.replace(/open/, ""), true);
-        last_dropdown_toggled = undefined
-    }
-    function handle_toggle_click(e, instance) {
-        e.stop_propagation();
-        instance.toggle()
     }
     dropdown.prototype = {
         constructor: dropdown, divide: function() {
@@ -632,6 +630,29 @@
                 return this.container.className.indexOf("open") > -1
             }
     };
+    function do_nothing(e) {
+        e.prevent_default()
+    }
+    function open_dropdown(instance) {
+        close_dropdown(last_dropdown_toggled);
+        var container = instance.container;
+        if (container.className.indexOf("open") === -1) {
+            container.className += " open"
+        }
+        last_dropdown_toggled = instance
+    }
+    function close_dropdown(instance) {
+        if ((instance instanceof dropdown) === false) {
+            return
+        }
+        var container = instance.container;
+        container.className = trim_spaces(container.className.replace(/open/, ""), true);
+        last_dropdown_toggled = undefined
+    }
+    function handle_toggle_click(e, instance) {
+        e.stop_propagation();
+        instance.toggle()
+    }
     add_event(document, "click", function(e) {
         var target = e.target || {};
         var parent = target.parentNode || {};
@@ -646,3 +667,127 @@
     });
     epic.dropdown = dropdown
 })(epic, window, document);
+(function(epic, window, document) {
+    var collection = {};
+    var copy = epic.object.copy;
+    function modalbox(settings) {
+        var t = this;
+        var overlay_id = settings.id;
+        var instance = collection[overlay_id];
+        if (overlay_id) {
+            if (instance) {
+                instance.cached = true;
+                return instance
+            }
+            else {
+                collection[overlay_id] = t
+            }
+        }
+        copy(modalbox.default_settings, settings, true);
+        t.cached = false;
+        var close = new epic.button({
+                classes: "epic-box-btn epic-btn-primary btn-hide-overlay", icon: new epic.icon({
+                        prefix: "icon", name: "remove"
+                    })
+            });
+        var box = t.box = new epic.box(settings.box);
+        if (settings.closable === true) {
+            box.controls.insertBefore(close.container, null)
+        }
+        var overlay = t.overlay = new epic.overlay({
+                content: box.container, closable: settings.closable
+            })
+    }
+    modalbox.default_settings = {
+        box: {
+            caption: "Hello!", singleview: true, width: 600, height: 300
+        }, closable: true
+    };
+    modalbox.prototype = {
+        constructor: modalbox, show: function() {
+                this.overlay.show()
+            }, close: function() {
+                this.overlay.hide()
+            }
+    };
+    epic.modalbox = modalbox
+})(epic, window, document);
+(function(epic, $) {
+    function tab_panel(settings) {
+        var t = this;
+        var id = settings.id || ("epic-tab-panel-" + epic.uid.next());
+        var container = $('<div id="' + id + '" class="epic-tab-panel"></div>');
+        var viewport = t.viewport = new epic.viewport;
+        t.container = container.append(viewport.container).get(0);
+        t.tabs = new tab_list(t);
+        t.tabs.add(settings.tabs)
+    }
+    function tab_list(panel) {
+        var t = [];
+        var panel_container = panel.container;
+        var ul = t.container = document.createElement("ul");
+        ul.className = "epic-tabs clearfix";
+        t.panel = panel;
+        t.constructor = tab_list;
+        t.add = add_tab;
+        panel_container.insertBefore(ul, panel_container.firstChild);
+        return t
+    }
+    function add_tab(tabs) {
+        tabs = tabs instanceof Array ? tabs : tabs == null ? [] : [tabs];
+        var t = this;
+        var container = t.container;
+        var viewport = t.panel.viewport;
+        var length = tabs.length;
+        var i = 0;
+        var item;
+        for (; i < length; i++) {
+            item = new tab(t, viewport, tabs[i]);
+            container.insertBefore(item.container, null)
+        }
+        return t
+    }
+    function tab(tab_list, viewport, settings) {
+        var t = this;
+        var caption = t.caption = settings.caption;
+        var a = t.anchor = $('<a href="#">' + caption + '</a>').click(handle_tab_click, t);
+        t.on_activate = settings.on_activate || nothing;
+        t.view = viewport.add_view().append(settings.content);
+        t.tab_list = tab_list;
+        t.container = $('<li></li>').append(a).get(0);
+        t.active = false;
+        if (settings.active === true) {
+            t.activate()
+        }
+    }
+    tab.prototype.activate = function() {
+        var t = this;
+        var active_tab = t.tab_list.active;
+        if (t.active) {
+            return
+        }
+        if (active_tab) {
+            active_tab.deactivate()
+        }
+        t.tab_list.active = t;
+        t.active = true;
+        t.container.className = "active";
+        t.view.activate();
+        t.on_activate(t)
+    };
+    tab.prototype.deactivate = function() {
+        var t = this;
+        var active_tab = t.tab_list.active;
+        if (active_tab === t) {
+            t.tab_list.active = null
+        }
+        t.active = false;
+        t.container.className = ""
+    };
+    function handle_tab_click(e, tab) {
+        e.prevent_default();
+        tab.activate()
+    }
+    function nothing(){}
+    epic.tab_panel = tab_panel
+})(epic, epic.html);

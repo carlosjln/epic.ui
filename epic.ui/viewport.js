@@ -1,5 +1,4 @@
-﻿( function( epic, window, document ) {
-	var $ = epic.html;
+﻿( function( epic, $, window, document ) {
 
 	function create( tag, classname, style, content ) {
 		var element = document.createElement( tag );
@@ -99,4 +98,4 @@
 
 	epic.viewport = viewport;
 	epic.view = view;
-} )( epic, window, document );
+} )( epic, epic.html, window, document );
