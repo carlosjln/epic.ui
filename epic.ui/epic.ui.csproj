@@ -39,6 +39,7 @@
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Content Include="theme\default\less\tab_panel.less" />
+    <Content Include="theme\default\less\alert.less" />
     <None Include="theme\default\less\dropdown.less" />
     <Content Include="theme\default\less\overlay.less" />
   </ItemGroup>

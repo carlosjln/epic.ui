@@ -18,9 +18,10 @@
     epic.ui = ui
 })(epic);
 (function(epic) {
+    var copy = epic.object.copy;
     function alert(settings) {
         var self = this;
-        settings = self.settings = epic.object.merge(alert.default_settings, settings);
+        settings = copy(alert.default_settings, settings, true);
         var element = self.container = document.createElement('div');
         var inner = self.message = document.createElement('span');
         var type = settings.type;
@@ -34,6 +35,9 @@
         }
         if (target) {
             target.insertBefore(element, null)
+        }
+        if (!settings.visible) {
+            this.hide()
         }
     }
     alert.prototype = {
@@ -64,7 +68,7 @@
         'default': 'default', success: 'success', info: 'info', warning: 'warning', danger: 'danger'
     };
     alert.default_settings = {
-        type: alert.type.default, message: "", target: null, closable: false
+        type: alert.type.default, message: "", target: null, visible: true, closable: false
     };
     epic.alert = alert
 })(epic);
@@ -319,7 +323,7 @@
                 t.container.style.display = 'none';
                 return t
             }, is_closed: function() {
-                return this.container.style.display == 'none'
+                return this.container.style.display === 'none'
             }, as_success: function() {
                 return this.set_type(alert.type.success)
             }, as_info: function() {
@@ -695,7 +699,7 @@
             box.controls.insertBefore(close.container, null)
         }
         var overlay = t.overlay = new epic.overlay({
-                content: box.container, closable: settings.closable
+                content: box.container, target: settings.target, closable: settings.closable
             })
     }
     modalbox.default_settings = {
@@ -727,24 +731,22 @@
         var panel_container = panel.container;
         var ul = t.container = document.createElement("ul");
         ul.className = "epic-tabs clearfix";
-        t.panel = panel;
         t.constructor = tab_list;
-        t.add = add_tab;
+        t.add = function(tabs) {
+            tabs = tabs instanceof Array ? tabs : tabs == null ? [] : [tabs];
+            var container = t.container;
+            var viewport = panel.viewport;
+            var length = tabs.length;
+            var i = 0;
+            var item;
+            for (; i < length; i++) {
+                item = new tab(t, viewport, tabs[i]);
+                t[t.length] = item;
+                container.insertBefore(item.container, null)
+            }
+            return t
+        };
         panel_container.insertBefore(ul, panel_container.firstChild);
-        return t
-    }
-    function add_tab(tabs) {
-        tabs = tabs instanceof Array ? tabs : tabs == null ? [] : [tabs];
-        var t = this;
-        var container = t.container;
-        var viewport = t.panel.viewport;
-        var length = tabs.length;
-        var i = 0;
-        var item;
-        for (; i < length; i++) {
-            item = new tab(t, viewport, tabs[i]);
-            container.insertBefore(item.container, null)
-        }
         return t
     }
     function tab(tab_list, viewport, settings) {

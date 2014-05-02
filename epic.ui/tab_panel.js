@@ -19,36 +19,35 @@
 		var ul = t.container = document.createElement( "ul" );
 
 		ul.className = "epic-tabs clearfix";
-		t.panel = panel;
-
+		
 		t.constructor = tab_list;
-		t.add = add_tab;
+
+		t.add = function( tabs ) {
+			tabs = tabs instanceof Array ? tabs :
+				tabs == null ? [] : [tabs];
+
+			var container = t.container;
+			var viewport = panel.viewport;
+
+			var length = tabs.length;
+			var i = 0;
+			var item;
+
+			for( ; i < length; i++ ) {
+				item = new tab( t, viewport, tabs[ i ] );
+				t[ t.length ] = item;
+				container.insertBefore( item.container, null );
+			}
+
+			return t;
+		};
 		
 		panel_container.insertBefore( ul, panel_container.firstChild );
 
 		return t;
 	}
 
-	function add_tab( tabs ) {
-		tabs = tabs instanceof Array ? tabs :
-			tabs == null ? [] : [tabs];
-
-		var t = this;
-		var container = t.container;
-		var viewport = t.panel.viewport;
-
-		var length = tabs.length;
-		var i = 0;
-		var item;
-
-		for( ; i < length; i++ ) {
-			item = new tab( t, viewport, tabs[ i ] );
-			container.insertBefore( item.container, null );
-		}
-
-		return t;
-	}
-
+	
 	function tab( tab_list, viewport, settings ) {
 		var t = this;
 		

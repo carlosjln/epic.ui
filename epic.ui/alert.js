@@ -1,8 +1,9 @@
 ﻿( function( epic ) {
+	var copy = epic.object.copy;
 
 	function alert( settings ) {
 		var self = this;
-		settings = self.settings = epic.object.merge( alert.default_settings, settings );
+		settings = copy( alert.default_settings, settings, true );
 
 		var element = self.container = document.createElement( 'div' );
 		var inner = self.message = document.createElement( 'span' );
@@ -22,6 +23,10 @@
 		
 		if( target ){
 			target.insertBefore( element, null );
+		}
+
+		if( !settings.visible ) {
+			this.hide();
 		}
 	}
 
@@ -77,6 +82,7 @@
 		message: "",
 		target: null,
 		
+		visible: true,
 		closable: false
 	};
 	

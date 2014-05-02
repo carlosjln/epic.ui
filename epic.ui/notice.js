@@ -108,7 +108,7 @@
 		},
 
 		is_closed: function() {
-			return this.container.style.display == 'none';
+			return this.container.style.display === 'none';
 		},
 
 		as_success: function() {

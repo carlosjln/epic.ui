@@ -36,6 +36,7 @@
 
 		var overlay = t.overlay = new epic.overlay( {
 			content: box.container,
+			target: settings.target,
 			closable: settings.closable
 		});
 	}
