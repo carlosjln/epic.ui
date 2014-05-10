@@ -19,25 +19,36 @@
 })(epic);
 (function(epic) {
     var copy = epic.object.copy;
+    var add_event = epic.event.add;
     function alert(settings) {
-        var self = this;
         settings = copy(alert.default_settings, settings, true);
-        var element = self.container = document.createElement('div');
-        var inner = self.message = document.createElement('span');
+        var t = this;
         var type = settings.type;
-        var message = settings.message;
+        var initial_message = settings.message;
         var target = settings.target;
-        element.insertBefore(inner, null);
-        inner.className = 'message';
-        element.className = "alert alert-" + (type ? type : "default");
-        if (message) {
-            inner.innerHTML = message
+        var container = t.container = document.createElement('div');
+        var message = t.message = document.createElement('span');
+        var dismiss_button = document.createElement('a');
+        container.className = "alert alert-" + (type ? type : "default");
+        container.insertBefore(message, null);
+        message.className = 'message';
+        dismiss_button.innerHTML = "x";
+        dismiss_button.className = "alert-dismiss";
+        dismiss_button.setAttribute("href", "#");
+        add_event(dismiss_button, "click", alert.event.dismiss, {
+            alert: t, on_dismiss: settings.on_dismiss || function(){}
+        });
+        if (initial_message) {
+            message.innerHTML = initial_message
         }
         if (target) {
-            target.insertBefore(element, null)
+            target.insertBefore(container, null)
         }
         if (!settings.visible) {
             this.hide()
+        }
+        if (settings.closable) {
+            container.insertBefore(dismiss_button, null)
         }
     }
     alert.prototype = {
@@ -70,6 +81,9 @@
     alert.default_settings = {
         type: alert.type.default, message: "", target: null, visible: true, closable: false
     };
+    alert.event = {dismiss: function(e, data) {
+            data.on_dismiss.call(data.alert.hide())
+        }};
     epic.alert = alert
 })(epic);
 (function(epic, document) {

@@ -203,7 +203,7 @@
   position: relative;
   border: 1px solid transparent;
   font-size: 14px;
-  line-height: 25px;
+  line-height: 30px;
   -webkit-border-radius: 5px;
   -moz-border-radius: 5px;
   border-radius: 5px;
@@ -224,8 +224,9 @@
 }
 .alert .message {
   overflow: hidden;
-  text-align: left;
   margin: 5px 10px;
+  text-align: left;
+  vertical-align: middle;
 }
 .alert .spaced {
   margin: 15px;
@@ -233,20 +234,24 @@
 .alert .alert-link {
   font-weight: bold;
 }
-.alert .close {
-  float: right;
-  width: 25px;
-  margin: 4px 5px 0 0;
+.alert .alert-dismiss {
+  position: absolute;
+  right: 3px;
+  top: 0;
+  width: 20px;
+  height: 30px;
   color: #000;
-  font-size: 24px;
+  font-size: 16px;
+  font-family: "Lucida Console";
+  line-height: inherit;
   -webkit-opacity: 0.2;
   -moz-opacity: 0.2;
   opacity: 0.2;
   -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=20)";
   filter: alpha(opacity=20);
 }
-.alert .close:hover,
-.alert .close:focus {
+.alert .alert-dismiss:hover,
+.alert .alert-dismiss:focus {
   text-decoration: none;
   cursor: pointer;
   -webkit-opacity: 0.5;

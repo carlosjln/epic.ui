@@ -17,7 +17,7 @@
 	border: 1px solid transparent;
 
 	font-size: 14px;
-	line-height: 25px;
+	line-height: 30px;
 	
 	.set-radius();
 
@@ -41,8 +41,10 @@
 
 	.message {
 		overflow: hidden;
-		text-align: left;
 		margin: 5px 10px;
+
+		text-align: left;
+		vertical-align: middle;
 	}
 
 	.spaced {
@@ -53,29 +55,29 @@
 		font-weight: bold;
 	}
 
-	.close {
-		float: right;
-		width: 25px;
+	.alert-dismiss {
+		position: absolute;
+		right: 3px;
+		top: 0;
 
-		margin: 4px 5px 0 0;
+		width: 20px;
+		height: 30px;
 
 		color: #000;
-		font-size: 24px;
-		
+		font-size: 16px;
+		font-family: "Lucida Console";
+		line-height: inherit;
+
 		.set-opacity( 0.2 );
-	}
 
-	.close:hover,
-	.close:focus {
-		text-decoration: none;
-		cursor: pointer;
-		
-		.set-opacity( 0.5 );
+		&:hover,
+		&:focus {
+			text-decoration: none;
+			cursor: pointer;
+			
+			.set-opacity( 0.5 );
+		}
 	}
-}
-
-.alert-dismissable {
-	// padding-right: 35px;
 }
 
 .alert-success {
