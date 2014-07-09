@@ -1,0 +1,43 @@
+﻿// NOTICE
+// ===================================================================
+
+@import "partials/mixins.less";
+@import "partials/variables.less";
+
+.progress-bar {
+	@font-size: 11px;
+	@line-height: 18px;
+	@height: 30px;
+
+	position: absolute;
+	
+	display: block;
+	height: @height;
+
+	.stretch(0px, 0px, 0px, 0px);
+	
+    .bar {
+		position: absolute;
+		top: 0;
+		left: 0;
+		bottom: 0;
+		
+        width: 0%;
+        height: @height;
+
+		font-size: @font-size !important;
+		line-height: @height - 2;
+
+        background-color: #228b22;
+    }
+
+    .percent {
+		margin-left: 10px;
+
+        text-align: left;
+		letter-spacing: 1px;
+		color: @gray-lighter;
+
+		vertical-align: middle;
+    }
+}

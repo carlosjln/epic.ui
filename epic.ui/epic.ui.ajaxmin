@@ -17,6 +17,7 @@
 		<input path="dropdown.js"/>
 		<input path="modalbox.js"/>
 		<input path="tab_panel.js"/>
+		<input path="progress_bar.js"/>
 	</output>
 	
 	<output path="bin\epic.ui.min.js" type="js">
@@ -32,11 +33,12 @@
 		<input path="dropdown.js"/>
 		<input path="modalbox.js"/>
 		<input path="tab_panel.js"/>
+		<input path="progress_bar.js"/>
 	</output>
 	
-	<output path="theme\default\style\epic.ui.min.css" type="css">
+	<output path="theme\default\css\epic.ui.min.css" type="css">
 		<arguments>-clobber</arguments>
-		<input path="theme\default\style\epic.ui.css"/>
+		<input path="theme\default\css\epic.ui.css"/>
 	</output>
 
 </root>

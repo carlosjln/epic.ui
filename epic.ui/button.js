@@ -80,10 +80,35 @@
 		caption: "",
 		classes: "",
 		attributes: "",
+
 		tag: button.tag.button,
 		size: button.size.normal,
 		role: button.role.button,
 		style: button.style.default,
+
+		show: function() {
+			var self = this;
+			self.container.style.display = '';
+
+			return self;
+		},
+
+		hide: function() {
+			var self = this;
+			self.container.style.display = 'none';
+
+			return self;
+		}//,
+
+//		remove: function () {
+//			var self = this;
+//			var container = self.container;
+//			var parent = container.parentNode;
+//
+//			parent.removeChild( container );
+//
+//			return self;
+//		}
 	};
 	
 	epic.object.extend( button, prototype );

@@ -58,19 +58,19 @@
 }
 
 .btn-warning {
-	.button-variant( @btn-warning-color, @btn-warning-bg );	// Warning appears as orange
+	.button-variant( @btn-warning-color, @btn-warning-bg );
 }
 
 .btn-danger {
-	.button-variant( @btn-danger-color, @btn-danger-bg );	// Danger and error appear as red
+	.button-variant( @btn-danger-color, @btn-danger-bg );
 }
 
 .btn-success {
-	.button-variant( @btn-success-color, @btn-success-bg );	// Success appears as green
+	.button-variant( @btn-success-color, @btn-success-bg );
 }
 
 .btn-info {
-	.button-variant( @btn-info-color, @btn-info-bg );		// Info appears as blue-green
+	.button-variant( @btn-info-color, @btn-info-bg );
 }
 
 .btn-size-normal {
@@ -88,13 +88,29 @@
 }
 
 .btn-group {
-	background-color: #F5F5F5;
-	border-top: 1px solid #E5E5E5;
-	margin: 20px 0;
-	padding: 19px 20px 20px;
-	
+	background-color: transparent;
+	border: none;
+
+	padding: 0;
+	margin: 0;
+
 	.btn {
-		margin-right: 5px;
+		.set-radius(0px);
+	}
+
+	.btn:first-child {
+		.set-left-radius;
+	}
+
+	.btn:last-child {
+		.set-right-radius;
+	}
+
+	.btn+.btn,
+	.btn+.btn-group,
+	.btn-group + .btn,
+	.btn-group + .btn-group {
+		margin-left: -1px;
 	}
 }
 

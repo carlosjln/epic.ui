@@ -27,7 +27,7 @@
 		self.controls = controls.get( 0 );
 
 		self.body = body.get( 0 );
-			
+		
 		body.append( viewport.container );
 
 		caption_wrapper.append( self.icon.container );

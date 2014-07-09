@@ -22,6 +22,7 @@
     <Content Include="bin\epic.ui.min.js" />
     <Content Include="button.js" />
     <Content Include="box.js" />
+    <Content Include="progress_bar.js" />
     <Content Include="tab_panel.js" />
     <Content Include="modalbox.js" />
     <Content Include="dropdown.js" />
@@ -29,8 +30,8 @@
     <Content Include="notice.js" />
     <Content Include="core.js" />
     <Content Include="icon.js" />
-    <Content Include="theme\default\style\epic.ui.css" />
-    <Content Include="theme\default\style\epic.ui.min.css" />
+    <Content Include="theme\default\css\epic.ui.css" />
+    <Content Include="theme\default\css\epic.ui.min.css" />
     <Content Include="viewport.js" />
   </ItemGroup>
   <ItemGroup>
@@ -40,8 +41,12 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Content Include="theme\default\less\tab_panel.less" />
     <Content Include="theme\default\less\alert.less" />
+    <Content Include="theme\default\less\progress_bar.less" />
+    <Content Include="theme\default\less\badge.less" />
     <None Include="theme\default\less\dropdown.less" />
     <Content Include="theme\default\less\overlay.less" />
+    <Content Include="theme\default\less\reset.less" />
+    <Content Include="theme\default\less\form-elements.less" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="theme\default\less\notice.less" />
@@ -104,7 +109,7 @@
   <Target Name="BeforeBuild">
     <PropertyGroup>
       <SourceLess>"$(ProjectDir)theme\default\less\epic.ui.less"</SourceLess>
-      <TargetLess>"$(ProjectDir)theme\default\style\epic.ui.css"</TargetLess>
+      <TargetLess>"$(ProjectDir)theme\default\css\epic.ui.css"</TargetLess>
     </PropertyGroup>
     <Exec Command="$(SolutionDir)tools\WinLess.lessc.1.0.14\tools\lessc.cmd $(SourceLess) $(TargetLess)" Condition="Exists('$(SolutionDir)tools\WinLess.lessc.1.0.14\tools\lessc.cmd')" />
   </Target>

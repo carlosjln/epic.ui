@@ -1,4 +1,6 @@
-﻿( function( epic, $, window, document ) {
+﻿( function( epic, window, document ) {
+	var epic_html = epic.html;
+	var object_copy = epic.object.copy;
 
 	function create( tag, classname, style, content ) {
 		var element = document.createElement( tag );
@@ -10,18 +12,24 @@
 		return element;
 	}
 
+	function nothing( ) {
+		
+	}
+
 	// VIEWPORT
-	function viewport() {
+	function viewport( settings ) {
 		var self = this;
 
 		self.views = [];
 		self.container = create( "div", "epic-viewport" );
+
+		object_copy( settings, self, true );
 	}
 
 	viewport.prototype.add_view = function() {
 		var self = this;
 		var views = self.views;
-		var v = new view( self );
+		var v = new view( {viewport: self} );
 
 		self.container.insertBefore( v.container, null );
 
@@ -32,32 +40,35 @@
 
 
 	// VIEW 
-	function view( viewport ) {
+	function view( settings ) {
 		var container = create("div", "epic-view", "");
 		var loader = create("span", "epic-view-status", "", "Working..."); 
-		var t = this;
+		var self = this;
 		
-		t.container = container;
-		t.loader = loader;
-		t.viewport = viewport;
+		self.container = container;
+		self.loader = loader;
+		self.viewport = settings.viewport;
 
 		container.insertBefore( loader, null );
 	}
 
 	view.prototype = {
 		is_busy: function( state ) {
-			var loader = this.loader;
+			var self = this;
+			var loader = self.loader;
 
 			loader.style.display = 'none';
 			loader.innerHTML = 'Working out...';
 
 			if( state ) {
-				loader.style.display = 'inline';
+				loader.style.display = '';
 
 				if( typeof state === "string" ) {
 					loader.innerHTML = state;
 				}
 			}
+
+			return  self;
 		},
 
 		activate: function() {
@@ -73,16 +84,22 @@
 			self.container.style.display = 'block';
 			vp.current_view = self;
 
+			(self.on_activate || vp.on_activate || nothing).call( vp, self );
+
 			return self;
 		},
 
 		empty: function() {
-			var self = this;
+			var self = this.is_busy( false );
 			var container = self.container;
 
-			self.is_busy( false );
+			// REMOVE ALL CHILDS
+			while( container.firstChild ) {
+				container.removeChild( container.firstChild );
+			}
 
-			$( container ).empty().append( self.loader );
+			// APPEND LOADER
+			container.appendChild( self.loader );
 
 			return self;
 		},
@@ -90,7 +107,7 @@
 		append: function( /*elements*/ ) {
 			var self = this;
 
-			$( self.container ).insert( arguments );
+			epic_html( self.container ).insert( arguments );
 
 			return self;
 		}
@@ -98,4 +115,4 @@
 
 	epic.viewport = viewport;
 	epic.view = view;
-} )( epic, epic.html, window, document );
+} )( epic, window, document );
