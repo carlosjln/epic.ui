@@ -33,6 +33,7 @@ AppPackages/
 *.user
 *.cmp7
 *.sln.docstates
+*.nuspec
 
 *.dll
 *_i.c

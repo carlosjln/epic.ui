@@ -337,32 +337,32 @@
             }, 50)
     }
     notice.prototype = {
-        set_content: function(content) {
+        show: function() {
             var t = this;
-            t.message.innerHTML = content;
+            var container = t.container;
+            container.style.display = 'block';
+            if (t.parentNode === null) {
+                get_notification_rail().insertBefore(container, null)
+            }
             return t
-        }, show: function() {
-                var t = this;
-                var container = t.container;
-                container.style.display = 'block';
-                if (t.parentNode === null) {
-                    get_notification_rail().insertBefore(container, null)
-                }
-                return t
-            }, hide: function() {
+        }, hide: function() {
                 var t = this;
                 t.container.style.display = 'none';
+                return t
+            }, set_message: function(content) {
+                var t = this;
+                t.message.innerHTML = content;
                 return t
             }, is_closed: function() {
                 return this.container.style.display === 'none'
             }, as_success: function() {
-                return this.set_type(alert.type.success)
+                return this.set_type(notice.type.success)
             }, as_info: function() {
-                return this.set_type(alert.type.info)
+                return this.set_type(notice.type.info)
             }, as_warning: function() {
-                return this.set_type(alert.type.warning)
+                return this.set_type(notice.type.warning)
             }, as_danger: function() {
-                return this.set_type(alert.type.danger)
+                return this.set_type(notice.type.danger)
             }, set_type: function(type) {
                 var t = this;
                 t.container.className = "epic-notice epic-notice-" + type;
